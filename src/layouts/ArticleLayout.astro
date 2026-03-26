@@ -1,0 +1,253 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+}
+
+const { article } = Astro.props;
+const { title, description, publishDate, tags, heroImage } = article.data;
+
+const formattedDate = publishDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const readingTime = Math.ceil(article.body.split(/\s+/).length / 200);
+const isArabic = /[\u0600-\u06FF]/.test(title);
+---
+
+<BaseLayout 
+  title={`${title} | Essays`} 
+  description={description}
+  image={heroImage}
+  articleDate={publishDate}
+>
+  <article class="article fade-in" dir={isArabic ? 'rtl' : 'ltr'}>
+    <header class="article-header">
+      {heroImage && (
+        <div class="hero-image-wrapper">
+          <img src={heroImage} alt="" class="hero-image" loading="eager" />
+        </div>
+      )}
+      <h1 class="article-title">{title}</h1>
+      <div class="article-meta">
+        <time datetime={publishDate.toISOString()}>{formattedDate}</time>
+        <span class="separator">&middot;</span>
+        <span>{readingTime} min read</span>
+      </div>
+      {tags && tags.length > 0 && (
+        <div class="article-tags">
+          {tags.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+    
+    <hr class="divider" />
+    
+    <div class="article-content">
+      <slot />
+    </div>
+    
+    <hr class="divider" />
+    
+    <footer class="article-footer">
+      <a href="/articles" class="back-link">&larr; Back to Articles</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .article {
+    padding: var(--spacing-section) 0;
+  }
+
+  .article-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .article-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .article-meta {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .separator {
+    margin: 0 0.5rem;
+  }
+
+  .article-tags {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--color-border);
+    border-radius: 2rem;
+    color: var(--color-text-secondary);
+  }
+
+  .article-content {
+    font-size: 1.125rem;
+    padding-top: 1rem;
+  }
+
+  .article-content :global(p) {
+    margin-bottom: 1.5rem;
+  }
+
+  .article-content :global(h2) {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .article-content :global(h3) {
+    font-family: var(--font-heading);
+    font-size: 1.375rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .article-content :global(blockquote) {
+    border-left: 3px solid var(--color-accent);
+    border-right: none;
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--color-text-secondary);
+  }
+
+  .article-content :global([dir="rtl"]) blockquote {
+    border-left: none;
+    border-right: 3px solid var(--color-accent);
+    padding-left: 0;
+    padding-right: 1.5rem;
+  }
+
+  .article-content :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--color-border);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+  }
+
+  .article-content :global(pre) {
+    background: #1A1A1A;
+    color: #FDFBF7;
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 2rem 0;
+  }
+
+  .article-content :global(pre code) {
+    background: none;
+    padding: 0;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .article-content :global(ul),
+  .article-content :global(ol) {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+    padding-right: 0;
+  }
+
+  .article-content :global([dir="rtl"]) ul,
+  .article-content :global([dir="rtl"]) ol {
+    padding-left: 0;
+    padding-right: 2rem;
+    direction: rtl;
+    list-style-position: inside;
+  }
+
+  .article-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .article-content :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .article-content :global(hr) {
+    border: none;
+    height: 1px;
+    background: var(--color-border);
+    margin: 3rem 0;
+  }
+
+  .article-content :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 2rem 0;
+  }
+
+  .article-content :global(figure) {
+    margin: 2rem 0;
+  }
+
+  .article-content :global(figcaption) {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+
+  .hero-image-wrapper {
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .article-footer {
+    text-align: center;
+  }
+
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+</style>

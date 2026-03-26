@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+
+const allArticles = await getCollection('articles', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+
+const articles = allArticles.sort((a, b) => 
+  b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+
+const recentArticles = articles.slice(0, 5);
+---
+
+<BaseLayout title="Essays | Personal Writing">
+  <section class="hero fade-in">
+    <div class="container">
+      <h1 class="hero-title">Thoughts &amp; Reflections</h1>
+      <p class="hero-subtitle">
+        A collection of essays on technology, creativity, and the spaces between.
+      </p>
+    </div>
+  </section>
+
+  <section class="recent-articles">
+    <div class="container">
+      <h2 class="section-title">Recent Writing</h2>
+      {recentArticles.length > 0 ? (
+        <div class="articles-list">
+          {recentArticles.map((article) => (
+            <ArticleCard article={article} />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-message">No articles yet. Check back soon.</p>
+      )}
+      {articles.length > 5 && (
+        <a href="/articles" class="view-all">View all articles &rarr;</a>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: calc(var(--spacing-section) * 1.5) 0;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .recent-articles {
+    padding-bottom: var(--spacing-section);
+  }
+
+  .section-title {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+  }
+
+  .articles-list {
+    margin-bottom: 2rem;
+  }
+
+  .empty-message {
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  .view-all {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    display: inline-block;
+    margin-top: 1rem;
+  }
+</style>

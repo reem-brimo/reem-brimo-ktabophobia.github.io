@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About | Essays" description="About the author">
+  <section class="about-page fade-in">
+    <div class="container">
+      <header class="page-header">
+        <h1 class="page-title">About</h1>
+      </header>
+
+      <div class="about-content">
+        <p>
+          Welcome. This is a space for essays, reflections, and long-form writing on topics 
+          that matter to me — technology, design, creativity, and the human experience.
+        </p>
+
+        <p>
+          I'm a writer and technologist who believes in the power of clear thinking and careful craft. 
+          Every piece here is an attempt to work through an idea thoroughly, to understand something 
+          better by putting it into words.
+        </p>
+
+        <h2>The Writing</h2>
+
+        <p>
+          Articles here cover a range of subjects, often at the intersection of technology and culture. 
+          Some are practical, sharing lessons learned from building things. Others are more reflective, 
+          exploring questions that don't have easy answers.
+        </p>
+
+        <p>
+          I write slowly and revise often. An essay might take weeks to reach a form I'm satisfied with. 
+          This isn't about perfection — it's about taking the time ideas deserve.
+        </p>
+
+        <h2>Get in Touch</h2>
+
+        <p>
+          If something here resonated with you, or if you want to discuss an idea, I'd love to hear from you.
+          You can find me on <a href="#">Twitter</a> or reach me by <a href="mailto:hello@example.com">email</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-page {
+    padding: var(--spacing-section) 0;
+  }
+
+  .page-header {
+    margin-bottom: 3rem;
+  }
+
+  .page-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: 700;
+  }
+
+  .about-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .about-content h2 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+</style>
